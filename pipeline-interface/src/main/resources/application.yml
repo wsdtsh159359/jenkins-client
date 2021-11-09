@@ -1,0 +1,74 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /jenkins2
+  ## redis配置
+spring:
+    application:
+        name: java-jenkins
+    redis-limiter:
+        name: java-jenkins                           #应用名称必须要配置，不然无法启动
+        redis-limiter:                            #限流器配置
+        redis-host: 172.17.54.54                 #redis server ip
+        redis-port: 30008
+#        redis-host: 192.168.99.100                #redis server ip
+#        redis-port: 6379 #redis 端口 nodePort 的 30008
+        check-action-timeout: 100           #访问检查动作最大执行时间(单位毫秒）
+        enable-dynamical-conf: true           #开启动态限流配置
+  ## jenkins配置
+jenkins:
+  config:
+    # 本地
+#        uri: http://localhost:8080
+#        userName: gaowei
+#        password: gaowei123
+#        view-name-map:
+#                  sonar: "测试"
+  # k8s
+      uri: http://172.17.54.55:30002
+      console-uri: http://172.17.54.55:30002
+      userName: admin
+      password: admin
+      view-name-map:
+             sonar: "Sonar扫描"
+## swagger配置
+swagger:
+  enabled: true #必填
+  title:  Java jenkins客户端 #必填
+  description: java操作jenkins #必填
+  version: 2.0 #必填
+  base-path: /** #必填
+  contact:
+    name: 高伟
+    email: 526201403@qq.com
+  license: Apache License, Version 2.0
+  license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+  base-package: com.kingdee.java.jenkins.client.controller
+  exclude-path: /error
+  #freemark模板目录位置
+
+kingdee:
+  ci:
+    # 本地：
+    # 模板文件基础路径
+#    templateLocation: ${templateLocation:D:\jenkins-workspace\kingdee\jenkins-client\src\main\resources\templates\}
+    # 生成的xml配置文件基础路径
+#    configXmlBasePath: ${configXmlBasePath:D:\jenkins-workspace\kingdee\jenkins-client\src\main\resources\xml\}
+    # K8容器
+    templateLocation: /tmp
+    configXmlBasePath: /tmp
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /
+  server:
+    servlet:
+      context-path: ${server.servlet.context-path}
+    port: ${server.port}
+  endpoint:
+    health:
+      show-details: always
+
+info: {status: ok}
